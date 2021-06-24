@@ -28,7 +28,7 @@ public class DefaultReservationService implements ReservationService {
 
     @Override
     public Reservation createReservation(Reservation reservation) {
-        if (reservation.getId() == null) {
+        if (reservation.getId() != null) {
             throw new BadRequestException("A record with this identifier already exists. To create a new record, please, don't provide a Id.");
         }
 
@@ -55,6 +55,6 @@ public class DefaultReservationService implements ReservationService {
     private Reservation findReservationById(Long id) throws ElementNotFoundException {
         return reservationRepository
                 .findById(id)
-                .orElseThrow(() -> new ElementNotFoundException("Hotel not found for the given identifier: reservation=" + id));
+                .orElseThrow(() -> new ElementNotFoundException("Reservation not found for the given identifier: reservation=" + id));
     }
 }
