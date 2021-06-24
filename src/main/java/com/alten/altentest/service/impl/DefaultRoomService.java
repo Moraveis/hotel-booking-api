@@ -1,12 +1,12 @@
 package com.alten.altentest.service.impl;
 
+import com.alten.altentest.exception.BadRequestException;
 import com.alten.altentest.exception.ElementNotFoundException;
 import com.alten.altentest.model.Room;
 import com.alten.altentest.repository.RoomRepository;
 import com.alten.altentest.service.RoomService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,27 +23,34 @@ public class DefaultRoomService implements RoomService {
 
     @Override
     public Room getRoomById(Long id) {
-        return findRoomBy(id);
+        return findRoomById(id);
     }
 
     @Override
     public Room createRoom(Room room) {
-        // TODO: add validation for id? or use a DTO?
-
         return roomRepository.save(room);
     }
 
     @Override
-    @Transactional
-    public void deleteRoom(Long id) {
-        Room room = findRoomBy(id);
+    public void updateRoom(Room room) {
+        if (room.getId() == null) {
+            throw new BadRequestException("A identifier must be provided.");
+        }
 
-        // TODO: make room unavailable
+        roomRepository.save(room);
     }
 
-    private Room findRoomBy(Long hotelId) throws ElementNotFoundException {
+    @Override
+    public void updateRoomAvailability(Long id, Boolean available) {
+        Room room = findRoomById(id);
+        room.setAvailable(available);
+
+        roomRepository.save(room);
+    }
+
+    private Room findRoomById(Long id) throws ElementNotFoundException {
         return roomRepository
-                .findById(hotelId)
-                .orElseThrow(() -> new ElementNotFoundException("Hotel not found for the given identifier: hotelId=" + hotelId));
+                .findById(id)
+                .orElseThrow(() -> new ElementNotFoundException("Hotel not found for the given identifier: hotelId=" + id));
     }
 }

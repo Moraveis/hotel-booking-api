@@ -23,6 +23,7 @@ public class Reservation implements Serializable {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String reservedBy;
+    private Boolean deleted;
 
     @ManyToOne
     private Room room;

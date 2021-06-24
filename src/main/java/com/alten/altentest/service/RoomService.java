@@ -12,6 +12,8 @@ public interface RoomService {
 
     Room createRoom(Room room);
 
-    void deleteRoom(Long id);
+    void updateRoom(Room room);
+
+    void updateRoomAvailability(Long id, Boolean available);
 
 }
