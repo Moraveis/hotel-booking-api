@@ -12,7 +12,7 @@ public interface RoomService {
 
     Room createRoom(Room room);
 
-    void updateRoom(Room room);
+    void updateRoom(Long id, Room room);
 
     void updateRoomAvailability(Long id, Boolean available);
 

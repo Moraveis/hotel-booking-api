@@ -1,6 +1,5 @@
 package com.alten.altentest.service.impl;
 
-import com.alten.altentest.exception.BadRequestException;
 import com.alten.altentest.exception.ElementNotFoundException;
 import com.alten.altentest.model.Room;
 import com.alten.altentest.repository.RoomRepository;
@@ -32,12 +31,14 @@ public class DefaultRoomService implements RoomService {
     }
 
     @Override
-    public void updateRoom(Room room) {
-        if (room.getId() == null) {
-            throw new BadRequestException("A identifier must be provided.");
-        }
+    public void updateRoom(Long id, Room room) {
+        Room existingRoom = findRoomById(id);
 
-        roomRepository.save(room);
+        existingRoom.setNumber(room.getNumber());
+        existingRoom.setAvailable(room.getAvailable());
+        existingRoom.setSuite(room.getSuite());
+
+        roomRepository.save(existingRoom);
     }
 
     @Override

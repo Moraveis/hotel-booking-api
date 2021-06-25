@@ -44,10 +44,13 @@ public class DefaultReservationService implements ReservationService {
     }
 
     @Override
-    public void updateReservation(Reservation reservation) {
-        if (reservation.getId() == null) {
-            throw new BadRequestException("A identifier must be provided.");
-        }
+    public void updateReservation(Long id, Reservation reservation) {
+        Reservation existingReservation = findReservationById(id);
+
+        existingReservation.setStartDate(reservation.getStartDate());
+        existingReservation.setEndDate(reservation.getEndDate());
+        // TODO: show we allow change the room?
+        existingReservation.setRoom(reservation.getRoom());
 
         reservationRepository.save(reservation);
     }

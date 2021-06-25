@@ -1,5 +1,7 @@
 package com.alten.altentest.controller;
 
+import com.alten.altentest.controller.mapper.RoomMapper;
+import com.alten.altentest.datatransferobject.RoomDTO;
 import com.alten.altentest.model.Room;
 import com.alten.altentest.service.impl.DefaultRoomService;
 import lombok.AllArgsConstructor;
@@ -7,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.util.List;
 
@@ -18,25 +21,27 @@ public class RoomController {
     private final DefaultRoomService defaultRoomService;
 
     @GetMapping
-    public List<Room> getAllRooms() {
-        return defaultRoomService.getAllRooms();
+    public List<RoomDTO> getAllRooms() {
+        return RoomMapper.toRoomDTOList(defaultRoomService.getAllRooms());
     }
 
     @GetMapping("/{id}")
-    public Room getRoomById(@PathParam("id") Long id) {
-        return defaultRoomService.getRoomById(id);
+    public RoomDTO getRoomById(@PathParam("id") Long id) {
+        return RoomMapper.toRoomDTO(defaultRoomService.getRoomById(id));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Room createRoom(@RequestBody Room room) {
-        return defaultRoomService.createRoom(room);
+    public RoomDTO createRoom(@Valid @RequestBody RoomDTO roomDTO) {
+        Room room = RoomMapper.fromRoomDTO(roomDTO);
+        return RoomMapper.toRoomDTO(defaultRoomService.createRoom(room));
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateRoom(@RequestBody Room room) {
-        defaultRoomService.updateRoom(room);
+    public void updateRoom(@PathParam("id") Long id, @Valid @RequestBody RoomDTO roomDTO) {
+        Room room = RoomMapper.fromRoomDTO(roomDTO);
+        defaultRoomService.updateRoom(id, room);
     }
 
     @PatchMapping("/{id}")

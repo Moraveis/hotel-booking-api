@@ -12,8 +12,8 @@ import java.util.List;
 
 @Builder
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "room")
 public class Room implements Serializable {
@@ -21,7 +21,10 @@ public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String number;
+
     private Boolean suite;
     private Boolean available;
 

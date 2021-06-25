@@ -71,18 +71,22 @@ public class DefaultRoomServiceTest {
 
     @Test
     public void givenAExistingRoomEntityThenUpdateRecord() {
-        Room existingRoom = Room.builder().id(1L).available(true).number("002").suite(false).build();
+        Long roomId = 1L;
+        Room roomToUpdate = Room.builder().available(false).build();
+        Room existingRoom = Room.builder().available(true).number("002").suite(false).build();
 
+        when(repository.findById(1L)).thenReturn(Optional.ofNullable(existingRoom));
         when(repository.save(any())).thenReturn(existingRoom);
 
-        service.updateRoom(existingRoom);
+        service.updateRoom(roomId, roomToUpdate);
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test(expected = ElementNotFoundException.class)
     public void shouldThrowExceptionWhenUpdatingNoPersistedEntity() {
-        Room room = Room.builder().available(true).build();
+        Long roomId = 1L;
+        Room roomToUpdate = Room.builder().available(false).build();
 
-        service.updateRoom(room);
+        service.updateRoom(roomId, roomToUpdate);
     }
 
     @Test
@@ -90,6 +94,8 @@ public class DefaultRoomServiceTest {
         Room existingRoom = Room.builder().id(1L).available(true).number("001").suite(false).build();
 
         when(repository.findById(any())).thenReturn(Optional.ofNullable(existingRoom));
+        assert existingRoom != null;
+
         when(repository.save(existingRoom)).thenReturn(existingRoom);
 
         service.updateRoomAvailability(1L, false);
