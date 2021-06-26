@@ -26,7 +26,7 @@ public class RoomController {
     }
 
     @GetMapping("/{id}")
-    public RoomDTO getRoomById(@PathParam("id") Long id) {
+    public RoomDTO getRoomById(@PathVariable("id") Long id) {
         return RoomMapper.toRoomDTO(defaultRoomService.getRoomById(id));
     }
 
@@ -39,14 +39,14 @@ public class RoomController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateRoom(@PathParam("id") Long id, @Valid @RequestBody RoomDTO roomDTO) {
+    public void updateRoom(@PathVariable("id") Long id, @Valid @RequestBody RoomDTO roomDTO) {
         Room room = RoomMapper.fromRoomDTO(roomDTO);
         defaultRoomService.updateRoom(id, room);
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateRoomAvailability(Long id, Boolean availability) {
+    public void updateRoomAvailability(@PathVariable("id") Long id, @RequestParam("availability") Boolean availability) {
         defaultRoomService.updateRoomAvailability(id, availability);
     }
 

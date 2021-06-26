@@ -1,6 +1,5 @@
 package com.alten.altentest.service.impl;
 
-import com.alten.altentest.exception.BadRequestException;
 import com.alten.altentest.exception.ElementNotFoundException;
 import com.alten.altentest.model.Reservation;
 import com.alten.altentest.repository.ReservationRepository;
@@ -9,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -28,9 +28,7 @@ public class DefaultReservationService implements ReservationService {
 
     @Override
     public Reservation createReservation(Reservation reservation) {
-        if (reservation.getId() != null) {
-            throw new BadRequestException("A record with this identifier already exists. To create a new record, please, don't provide a Id.");
-        }
+
 
         return reservationRepository.save(reservation);
     }
@@ -47,12 +45,13 @@ public class DefaultReservationService implements ReservationService {
     public void updateReservation(Long id, Reservation reservation) {
         Reservation existingReservation = findReservationById(id);
 
-        existingReservation.setStartDate(reservation.getStartDate());
-        existingReservation.setEndDate(reservation.getEndDate());
+        existingReservation.setStartDate(Optional.ofNullable(reservation.getStartDate()).orElse(existingReservation.getStartDate()));
+        existingReservation.setEndDate(Optional.ofNullable(reservation.getEndDate()).orElse(existingReservation.getEndDate()));
+        existingReservation.setReservedBy(Optional.ofNullable(reservation.getReservedBy()).orElse(existingReservation.getReservedBy()));
         // TODO: show we allow change the room?
-        existingReservation.setRoom(reservation.getRoom());
+//        existingReservation.setRoom(reservation.getRoom());
 
-        reservationRepository.save(reservation);
+        reservationRepository.save(existingReservation);
     }
 
     private Reservation findReservationById(Long id) throws ElementNotFoundException {

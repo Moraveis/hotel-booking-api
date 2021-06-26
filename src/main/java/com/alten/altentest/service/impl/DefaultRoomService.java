@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -34,9 +35,9 @@ public class DefaultRoomService implements RoomService {
     public void updateRoom(Long id, Room room) {
         Room existingRoom = findRoomById(id);
 
-        existingRoom.setNumber(room.getNumber());
-        existingRoom.setAvailable(room.getAvailable());
-        existingRoom.setSuite(room.getSuite());
+        existingRoom.setNumber(Optional.of(room.getNumber()).orElse(existingRoom.getNumber()));
+        existingRoom.setAvailable(Optional.of(room.getAvailable()).orElse(existingRoom.getAvailable()));
+        existingRoom.setSuite(Optional.of(room.getSuite()).orElse(existingRoom.getSuite()));
 
         roomRepository.save(existingRoom);
     }
@@ -52,6 +53,6 @@ public class DefaultRoomService implements RoomService {
     private Room findRoomById(Long id) throws ElementNotFoundException {
         return roomRepository
                 .findById(id)
-                .orElseThrow(() -> new ElementNotFoundException("Hotel not found for the given identifier: hotelId=" + id));
+                .orElseThrow(() -> new ElementNotFoundException("Room not found for the given identifier: RoomId=" + id));
     }
 }
