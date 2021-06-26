@@ -1,6 +1,5 @@
 package com.alten.altentest.service;
 
-import com.alten.altentest.exception.BadRequestException;
 import com.alten.altentest.exception.ElementNotFoundException;
 import com.alten.altentest.model.Room;
 import com.alten.altentest.repository.RoomRepository;
