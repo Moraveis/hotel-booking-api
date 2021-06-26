@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.alten.altentest.util.TestUtil.buildRoom;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,7 +32,7 @@ public class DefaultRoomServiceTest {
 
     @Test
     public void shouldReturnAllRooms() {
-        List<Room> rooms = Collections.singletonList(new Room());
+        List<Room> rooms = Collections.singletonList(buildRoom());
 
         when(repository.findAll()).thenReturn(rooms);
 
@@ -40,7 +41,7 @@ public class DefaultRoomServiceTest {
 
     @Test
     public void givenRoomIdentifierThenReturnEntity() {
-        Room room = Room.builder().id(1L).available(true).number("001").suite(false).build();
+        Room room = buildRoom();
 
         when(repository.findById(anyLong())).thenReturn(Optional.of(room));
 
@@ -52,7 +53,7 @@ public class DefaultRoomServiceTest {
 
     @Test
     public void givenRoomEntityThenSuccessfullySaved() {
-        Room room = Room.builder().available(true).number("001").suite(false).build();
+        Room room = buildRoom();
 
         when(repository.save(room)).thenReturn(room);
 
@@ -70,27 +71,29 @@ public class DefaultRoomServiceTest {
 
     @Test
     public void givenAExistingRoomEntityThenUpdateRecord() {
-        Long roomId = 1L;
-        Room roomToUpdate = Room.builder().available(false).build();
-        Room existingRoom = Room.builder().id(1L).available(true).number("002").suite(false).build();
+        Room roomToUpdate = buildRoom();
+        roomToUpdate.setAvailable(false);
+
+        Room existingRoom = buildRoom();
+        existingRoom.setNumber("002");
 
         when(repository.findById(1L)).thenReturn(Optional.ofNullable(existingRoom));
         when(repository.save(any())).thenReturn(existingRoom);
 
-        service.updateRoom(roomId, roomToUpdate);
+        service.updateRoom(1L, roomToUpdate);
     }
 
     @Test(expected = ElementNotFoundException.class)
     public void shouldThrowExceptionWhenUpdatingNoPersistedEntity() {
-        Long roomId = 1L;
-        Room roomToUpdate = Room.builder().available(false).build();
+        Room roomToUpdate = buildRoom();
+        roomToUpdate.setAvailable(false);
 
-        service.updateRoom(roomId, roomToUpdate);
+        service.updateRoom(1L, roomToUpdate);
     }
 
     @Test
     public void givenIdAndRoomStatusThenUpdateRecord() {
-        Room existingRoom = Room.builder().id(1L).available(true).number("001").suite(false).build();
+        Room existingRoom = buildRoom();
 
         when(repository.findById(any())).thenReturn(Optional.ofNullable(existingRoom));
         assert existingRoom != null;

@@ -4,6 +4,7 @@ import com.alten.altentest.model.Reservation;
 import com.alten.altentest.model.Room;
 import com.alten.altentest.repository.ReservationRepository;
 import com.alten.altentest.repository.RoomRepository;
+import com.alten.altentest.util.TestUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,8 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -74,12 +73,7 @@ public class RoomControllerIntegTest {
         Room newRoom = Room.builder().number("002").suite(true).available(true).build();
         roomRepository.save(newRoom);
 
-        Reservation reservation = Reservation.builder()
-                .startDate(LocalDateTime.of(2021, 6, 27, 8, 0))
-                .endDate(LocalDateTime.of(2021, 6, 28, 8, 0))
-                .reservedBy("user")
-                .room(newRoom)
-                .build();
+        Reservation reservation = TestUtil.buildReservation(newRoom);
         reservationRepository.save(reservation);
 
         mockMvc
@@ -151,6 +145,5 @@ public class RoomControllerIntegTest {
                 .andExpect(jsonPath("$.suite", equalTo(false)))
                 .andExpect(jsonPath("$.available", equalTo(false)));
     }
-
 
 }

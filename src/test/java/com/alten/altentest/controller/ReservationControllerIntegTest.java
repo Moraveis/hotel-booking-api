@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 
+import static com.alten.altentest.util.TestUtil.buildReservation;
+import static com.alten.altentest.util.TestUtil.buildReservationDTO;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -51,12 +53,7 @@ public class ReservationControllerIntegTest {
     @DisplayName("When all Reservations are requested then they are all returned")
     void allReservationsRequested() throws Exception {
         Room room = roomRepository.findById(1L).get();
-        Reservation reservation = Reservation.builder()
-                .startDate(LocalDateTime.of(2021, 6, 27, 8, 0))
-                .endDate(LocalDateTime.of(2021, 6, 28, 8, 0))
-                .reservedBy("user")
-                .room(room)
-                .build();
+        Reservation reservation = buildReservation(room);
         reservationRepository.save(reservation);
 
         mockMvc
@@ -69,12 +66,7 @@ public class ReservationControllerIntegTest {
     @DisplayName("When a given ID is provided then we return the respective reservation")
     void givenIdFindReservation() throws Exception {
         Room room = roomRepository.findById(1L).get();
-        Reservation reservation = Reservation.builder()
-                .startDate(LocalDateTime.of(2021, 6, 27, 8, 0))
-                .endDate(LocalDateTime.of(2021, 6, 28, 8, 0))
-                .reservedBy("user")
-                .room(room)
-                .build();
+        Reservation reservation = buildReservation(room);
         reservationRepository.save(reservation);
 
         mockMvc
@@ -91,20 +83,12 @@ public class ReservationControllerIntegTest {
     @Test
     @DisplayName("When a reservation creation is requested then it is persisted")
     void reservationCreatedCorrectly() throws Exception {
-        Room room = roomRepository.findById(1L).get();
-
-        ReservationDTO reservation = ReservationDTO.builder()
-                .startDate(LocalDateTime.of(2021, 6, 27, 8, 0))
-                .endDate(LocalDateTime.of(2021, 6, 28, 8, 0))
-                .reservedBy("user")
-                .deleted(false)
-                .roomId(room.getId())
-                .build();
+        ReservationDTO reservationDTO = buildReservationDTO();
 
         mockMvc
                 .perform(post("/reservations")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(reservation)))
+                        .content(mapper.writeValueAsString(reservationDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", equalTo(1)));
     }
@@ -121,20 +105,12 @@ public class ReservationControllerIntegTest {
     @DisplayName("When a reservation update is requested then it is persisted")
     void roomUpdatedCorrectly() throws Exception {
         Room room = roomRepository.findById(1L).get();
-        Reservation reservation = Reservation.builder()
-                .startDate(LocalDateTime.of(2021, 6, 27, 8, 0))
-                .endDate(LocalDateTime.of(2021, 6, 28, 8, 0))
-                .reservedBy("user")
-                .room(room)
-                .build();
+
+        Reservation reservation = buildReservation(room);
         reservationRepository.save(reservation);
 
-        ReservationDTO reservationDTO = ReservationDTO.builder()
-                .startDate(LocalDateTime.of(2021, 6, 27, 8, 0))
-                .endDate(LocalDateTime.of(2021, 6, 29, 8, 0))
-                .reservedBy("user")
-                .roomId(1L)
-                .build();
+        ReservationDTO reservationDTO = buildReservationDTO();
+        reservationDTO.setEndDate(LocalDateTime.of(2021, 6, 29, 8, 0));
 
         mockMvc
                 .perform(put("/reservations/1")
@@ -147,12 +123,7 @@ public class ReservationControllerIntegTest {
     @DisplayName("When a given ID is provided then we inactivate the respective reservation")
     void deleteReservationGivenID() throws Exception {
         Room room = roomRepository.findById(1L).get();
-        Reservation reservation = Reservation.builder()
-                .startDate(LocalDateTime.of(2021, 6, 27, 8, 0))
-                .endDate(LocalDateTime.of(2021, 6, 28, 8, 0))
-                .reservedBy("user")
-                .room(room)
-                .build();
+        Reservation reservation = buildReservation(room);
         reservationRepository.save(reservation);
 
         mockMvc

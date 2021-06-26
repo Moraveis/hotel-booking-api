@@ -5,6 +5,7 @@ import com.alten.altentest.model.Room;
 import com.alten.altentest.repository.ReservationRepository;
 import com.alten.altentest.repository.RoomRepository;
 import com.alten.altentest.service.impl.DefaultReservationService;
+import com.alten.altentest.util.TestUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,11 +13,11 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.alten.altentest.util.TestUtil.buildRoom;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,13 +37,8 @@ public class DefaultReservationServiceTest {
 
     @Test
     public void shouldReturnAllReservations() {
-        Reservation reservation = Reservation.builder()
-                .id(1L)
-                .startDate(LocalDateTime.of(2021, 6, 25, 10, 0))
-                .endDate(LocalDateTime.of(2021, 6, 27, 8, 0))
-                .deleted(false)
-                .reservedBy("Joao Moraveis")
-                .build();
+        Room room = buildRoom();
+        Reservation reservation = TestUtil.buildReservation(room);
 
         when(reservationRepository.findAll()).thenReturn(Collections.singletonList(reservation));
 
@@ -53,13 +49,8 @@ public class DefaultReservationServiceTest {
 
     @Test
     public void givenReservationIdThenReturnEntitySuccessfully() {
-        Reservation reservation = Reservation.builder()
-                .id(1L)
-                .startDate(LocalDateTime.of(2021, 6, 25, 10, 0))
-                .endDate(LocalDateTime.of(2021, 6, 27, 8, 0))
-                .deleted(false)
-                .reservedBy("Joao Moraveis")
-                .build();
+        Room room = buildRoom();
+        Reservation reservation = TestUtil.buildReservation(room);
 
         when(reservationRepository.findById(1L)).thenReturn(Optional.ofNullable(reservation));
 
@@ -77,15 +68,8 @@ public class DefaultReservationServiceTest {
 
     @Test
     public void givenValidReservationObjectThenCreateSuccessfully() {
-        Room room = Room.builder().id(1L).build();
-
-        Reservation reservation = Reservation.builder()
-                .startDate(LocalDateTime.of(2021, 6, 25, 10, 0))
-                .endDate(LocalDateTime.of(2021, 6, 27, 8, 0))
-                .room(room)
-                .deleted(false)
-                .reservedBy("user")
-                .build();
+        Room room = buildRoom();
+        Reservation reservation = TestUtil.buildReservation(room);
 
         when(roomRepository.findById(1L)).thenReturn(Optional.ofNullable(room));
         when(reservationRepository.save(any())).thenReturn(reservation);
@@ -95,12 +79,8 @@ public class DefaultReservationServiceTest {
 
     @Test
     public void givenReservationIdThenDeleteSuccessfully() {
-        Reservation reservation = Reservation.builder()
-                .startDate(LocalDateTime.of(2021, 6, 25, 10, 0))
-                .endDate(LocalDateTime.of(2021, 6, 27, 8, 0))
-                .deleted(true)
-                .reservedBy("Joao Moraveis")
-                .build();
+        Room room = buildRoom();
+        Reservation reservation = TestUtil.buildReservation(room);
 
         when(reservationRepository.findById(1L)).thenReturn(Optional.ofNullable(reservation));
         when(reservationRepository.save(any())).thenReturn(reservation);
