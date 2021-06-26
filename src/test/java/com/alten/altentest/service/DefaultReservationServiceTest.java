@@ -1,7 +1,9 @@
 package com.alten.altentest.service;
 
 import com.alten.altentest.model.Reservation;
+import com.alten.altentest.model.Room;
 import com.alten.altentest.repository.ReservationRepository;
+import com.alten.altentest.repository.RoomRepository;
 import com.alten.altentest.service.impl.DefaultReservationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +27,9 @@ public class DefaultReservationServiceTest {
 
     @Mock
     private ReservationRepository reservationRepository;
+
+    @Mock
+    private RoomRepository roomRepository;
 
     @InjectMocks
     private DefaultReservationService defaultReservationService;
@@ -72,13 +77,17 @@ public class DefaultReservationServiceTest {
 
     @Test
     public void givenValidReservationObjectThenCreateSuccessfully() {
+        Room room = Room.builder().id(1L).build();
+
         Reservation reservation = Reservation.builder()
                 .startDate(LocalDateTime.of(2021, 6, 25, 10, 0))
                 .endDate(LocalDateTime.of(2021, 6, 27, 8, 0))
+                .room(room)
                 .deleted(false)
-                .reservedBy("Joao Moraveis")
+                .reservedBy("user")
                 .build();
 
+        when(roomRepository.findById(1L)).thenReturn(Optional.ofNullable(room));
         when(reservationRepository.save(any())).thenReturn(reservation);
 
         defaultReservationService.createReservation(reservation);
