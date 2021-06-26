@@ -43,16 +43,17 @@ public class ReservationController {
         return ReservationMapper.toReservationDTO(defaultReservationService.createReservation(reservation));
     }
 
+    @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateReservation(@PathVariable("id") Long id, @RequestBody ReservationDTO reservationDTO) {
+        Reservation reservation = ReservationMapper.fromReservationDTO(reservationDTO);
+        defaultReservationService.updateReservation(id, reservation);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteReservation(@PathVariable("id") Long id) {
         defaultReservationService.deleteReservation(id);
-    }
-
-    @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void updateReservation(@PathVariable("id") Long id, @RequestBody ReservationDTO reservationDTO) {
-        Reservation reservation = ReservationMapper.fromReservationDTO(reservationDTO);
-        defaultReservationService.updateReservation(id, reservation);
     }
 
 }

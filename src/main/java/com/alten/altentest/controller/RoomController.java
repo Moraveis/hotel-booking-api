@@ -50,7 +50,7 @@ public class RoomController {
         return RoomMapper.toRoomDTO(defaultRoomService.createRoom(room));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateRoom(@PathVariable("id") Long id, @Valid @RequestBody RoomDTO roomDTO) {
         Room room = RoomMapper.fromRoomDTO(roomDTO);

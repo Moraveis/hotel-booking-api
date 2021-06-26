@@ -2,6 +2,7 @@ package com.alten.altentest.controller.mapper;
 
 import com.alten.altentest.datatransferobject.ReservationDTO;
 import com.alten.altentest.model.Reservation;
+import com.alten.altentest.model.Room;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ public class ReservationMapper {
                 .startDate(reservationDTO.getStartDate())
                 .endDate(reservationDTO.getEndDate())
                 .reservedBy(reservationDTO.getReservedBy())
+                .room(Room.builder().id(reservationDTO.getRoomId()).build())
                 .build();
     }
 

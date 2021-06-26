@@ -1,6 +1,5 @@
 package com.alten.altentest.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,7 +39,6 @@ public class Room implements Serializable {
     @Builder.Default
     private Boolean available = Boolean.TRUE;
 
-    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
     private List<Reservation> reservations;
 }
