@@ -23,6 +23,7 @@ public class ReservationMapper {
                 .endDate(reservation.getEndDate())
                 .reservedBy(reservation.getReservedBy())
                 .deleted(reservation.getDeleted())
+                .roomId(reservation.getRoom().getId())
                 .build();
     }
 

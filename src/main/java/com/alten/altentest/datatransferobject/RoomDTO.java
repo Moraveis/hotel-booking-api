@@ -1,6 +1,5 @@
 package com.alten.altentest.datatransferobject;
 
-import com.alten.altentest.model.Reservation;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,13 +22,8 @@ public class RoomDTO {
 
     @NotNull
     private String number;
-
-    @Builder.Default
-    private Boolean suite = Boolean.FALSE;
-
-    @Builder.Default
-    private Boolean available = Boolean.TRUE;
-
-    private List<Reservation> reservations;
+    private Boolean suite;
+    private Boolean available;
+    private List<ReservationDTO> reservations;
 
 }

@@ -35,9 +35,9 @@ public class DefaultRoomService implements RoomService {
     public void updateRoom(Long id, Room room) {
         Room existingRoom = findRoomById(id);
 
-        existingRoom.setNumber(Optional.of(room.getNumber()).orElse(existingRoom.getNumber()));
-        existingRoom.setAvailable(Optional.of(room.getAvailable()).orElse(existingRoom.getAvailable()));
-        existingRoom.setSuite(Optional.of(room.getSuite()).orElse(existingRoom.getSuite()));
+        existingRoom.setNumber(Optional.ofNullable(room.getNumber()).orElse(existingRoom.getNumber()));
+        existingRoom.setAvailable(Optional.ofNullable(room.getAvailable()).orElse(existingRoom.getAvailable()));
+        existingRoom.setSuite(Optional.ofNullable(room.getSuite()).orElse(existingRoom.getSuite()));
 
         roomRepository.save(existingRoom);
     }

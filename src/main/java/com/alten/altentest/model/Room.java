@@ -34,8 +34,11 @@ public class Room implements Serializable {
     @Column(nullable = false)
     private String number;
 
-    private Boolean suite;
-    private Boolean available;
+    @Builder.Default
+    private Boolean suite = Boolean.FALSE;
+
+    @Builder.Default
+    private Boolean available = Boolean.TRUE;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

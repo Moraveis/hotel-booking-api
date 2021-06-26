@@ -99,5 +99,4 @@ public class DefaultReservationServiceTest {
         defaultReservationService.deleteReservation(1L);
     }
 
-
 }

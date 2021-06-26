@@ -32,4 +32,7 @@ public class ReservationDTO {
 
     @Builder.Default
     private Boolean deleted = Boolean.FALSE;
+
+    @NotNull
+    private Long roomId;
 }

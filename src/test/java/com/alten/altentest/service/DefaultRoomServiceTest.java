@@ -72,7 +72,7 @@ public class DefaultRoomServiceTest {
     public void givenAExistingRoomEntityThenUpdateRecord() {
         Long roomId = 1L;
         Room roomToUpdate = Room.builder().available(false).build();
-        Room existingRoom = Room.builder().available(true).number("002").suite(false).build();
+        Room existingRoom = Room.builder().id(1L).available(true).number("002").suite(false).build();
 
         when(repository.findById(1L)).thenReturn(Optional.ofNullable(existingRoom));
         when(repository.save(any())).thenReturn(existingRoom);
@@ -99,6 +99,5 @@ public class DefaultRoomServiceTest {
 
         service.updateRoomAvailability(1L, false);
     }
-
 
 }

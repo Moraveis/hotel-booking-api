@@ -17,12 +17,21 @@ public class RoomMapper {
     }
 
     public static RoomDTO toRoomDTO(Room room) {
-        // TODO: add list of reservations from now() to future
         return RoomDTO.builder()
                 .id(room.getId())
                 .available(room.getAvailable())
                 .number(room.getNumber())
                 .suite(room.getSuite())
+                .build();
+    }
+
+    public static RoomDTO toRoomDTOWithReservations(Room room) {
+        return RoomDTO.builder()
+                .id(room.getId())
+                .available(room.getAvailable())
+                .number(room.getNumber())
+                .suite(room.getSuite())
+                .reservations(ReservationMapper.toReservationDTOList(room.getReservations()))
                 .build();
     }
 
