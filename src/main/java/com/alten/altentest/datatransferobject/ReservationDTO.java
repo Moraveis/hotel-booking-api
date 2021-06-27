@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
 
@@ -18,13 +19,16 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReservationDTO {
+    private final static String DATA_FORMAT = "yyyy-MM-dd'T'hh:mm:ss";
 
     private Long id;
 
     @NotNull
+    @Pattern(regexp = DATA_FORMAT)
     private LocalDateTime startDate;
 
     @NotNull
+    @Pattern(regexp = DATA_FORMAT)
     private LocalDateTime endDate;
 
     @NotNull

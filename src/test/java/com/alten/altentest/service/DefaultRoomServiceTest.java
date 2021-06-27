@@ -1,5 +1,6 @@
 package com.alten.altentest.service;
 
+import com.alten.altentest.exception.ConstraintsViolationException;
 import com.alten.altentest.exception.ElementNotFoundException;
 import com.alten.altentest.model.Room;
 import com.alten.altentest.repository.RoomRepository;
@@ -8,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Collections;
@@ -52,7 +54,7 @@ public class DefaultRoomServiceTest {
     }
 
     @Test
-    public void givenRoomEntityThenSuccessfullySaved() {
+    public void givenRoomEntityThenSuccessfullySaved() throws ConstraintsViolationException {
         Room room = buildRoom();
 
         when(repository.save(room)).thenReturn(room);
@@ -60,6 +62,15 @@ public class DefaultRoomServiceTest {
         Room savedRoom = service.createRoom(room);
 
         assertNotNull(savedRoom);
+    }
+
+    @Test(expected = ConstraintsViolationException.class)
+    public void shouldThrowExceptionWhenViolationConstraints() throws ConstraintsViolationException {
+        Room room = buildRoom();
+
+        when(repository.save(any())).thenThrow(DataIntegrityViolationException.class);
+
+        service.createRoom(room);
     }
 
     @Test(expected = ElementNotFoundException.class)

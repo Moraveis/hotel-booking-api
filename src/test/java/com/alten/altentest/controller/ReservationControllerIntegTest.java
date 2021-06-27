@@ -116,6 +116,7 @@ public class ReservationControllerIntegTest {
                 .perform(put("/reservations/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(reservationDTO)))
+                .andDo(print())
                 .andExpect(status().isNoContent());
     }
 

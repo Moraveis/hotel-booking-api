@@ -2,6 +2,7 @@ package com.alten.altentest.controller;
 
 import com.alten.altentest.controller.mapper.RoomMapper;
 import com.alten.altentest.datatransferobject.RoomDTO;
+import com.alten.altentest.exception.ConstraintsViolationException;
 import com.alten.altentest.model.Room;
 import com.alten.altentest.service.impl.DefaultRoomService;
 import lombok.AllArgsConstructor;
@@ -45,7 +46,7 @@ public class RoomController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public RoomDTO createRoom(@Valid @RequestBody RoomDTO roomDTO) {
+    public RoomDTO createRoom(@Valid @RequestBody RoomDTO roomDTO) throws ConstraintsViolationException {
         Room room = RoomMapper.fromRoomDTO(roomDTO);
         return RoomMapper.toRoomDTO(defaultRoomService.createRoom(room));
     }

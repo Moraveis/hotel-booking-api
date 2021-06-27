@@ -1,5 +1,6 @@
 package com.alten.altentest.controller;
 
+import com.alten.altentest.datatransferobject.RoomDTO;
 import com.alten.altentest.model.Reservation;
 import com.alten.altentest.model.Room;
 import com.alten.altentest.repository.ReservationRepository;
@@ -90,7 +91,7 @@ public class RoomControllerIntegTest {
     @Test
     @DisplayName("When a room creation is requested then it is persisted")
     void roomCreatedCorrectly() throws Exception {
-        Room newRoom = Room.builder().number("002").suite(true).available(true).build();
+        RoomDTO newRoom = RoomDTO.builder().number("002").suite(true).available(true).build();
 
         mockMvc
                 .perform(post("/rooms")
@@ -98,6 +99,19 @@ public class RoomControllerIntegTest {
                         .content(mapper.writeValueAsString(newRoom)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", equalTo(2)));
+    }
+
+    @Test
+    @DisplayName("When Required Info Is Not Provided Return BadRequestException")
+    void whenRequiredInfoIsNotProvidedThenReturnBadRequestException() throws Exception {
+        RoomDTO newRoom = RoomDTO.builder().suite(true).available(true).build();
+
+        mockMvc
+                .perform(post("/rooms")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(newRoom)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -111,12 +125,12 @@ public class RoomControllerIntegTest {
     @Test
     @DisplayName("When a room update is requested then it is persisted")
     void roomUpdatedCorrectly() throws Exception {
-        Room room = Room.builder().number("001").suite(true).available(false).build();
+        RoomDTO roomDTO = RoomDTO.builder().number("001").suite(true).available(false).build();
 
         mockMvc
                 .perform(put("/rooms/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(room)))
+                        .content(mapper.writeValueAsString(roomDTO)))
                 .andExpect(status().isNoContent());
 
         mockMvc

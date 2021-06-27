@@ -1,10 +1,12 @@
 package com.alten.altentest.service.impl;
 
+import com.alten.altentest.exception.ConstraintsViolationException;
 import com.alten.altentest.exception.ElementNotFoundException;
 import com.alten.altentest.model.Room;
 import com.alten.altentest.repository.RoomRepository;
 import com.alten.altentest.service.RoomService;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,8 +29,16 @@ public class DefaultRoomService implements RoomService {
     }
 
     @Override
-    public Room createRoom(Room room) {
-        return roomRepository.save(room);
+    public Room createRoom(Room room) throws ConstraintsViolationException {
+        Room saved;
+
+        try {
+            saved = roomRepository.save(room);
+        } catch (DataIntegrityViolationException e) {
+            throw new ConstraintsViolationException(e.getMessage());
+        }
+
+        return saved;
     }
 
     @Override

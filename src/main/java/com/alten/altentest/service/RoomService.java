@@ -1,5 +1,6 @@
 package com.alten.altentest.service;
 
+import com.alten.altentest.exception.ConstraintsViolationException;
 import com.alten.altentest.model.Room;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface RoomService {
 
     Room getRoomById(Long id);
 
-    Room createRoom(Room room);
+    Room createRoom(Room room) throws ConstraintsViolationException;
 
     void updateRoom(Long id, Room room);
 
