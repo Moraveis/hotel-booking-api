@@ -71,7 +71,7 @@ public class DefaultRoomService implements RoomService {
             return room;
         }
 
-        if (room.getReservations().stream().anyMatch(r -> ReservationUtil.isWithinRange(startDate, endDate, r))) {
+        if (room.getReservations().stream().filter(r -> !r.getDeleted()).anyMatch(r -> ReservationUtil.isWithinRange(startDate, endDate, r))) {
             throw new BadRequestException(String.format("No available room for the requested period: room=%s, start=%s, end=%s", id, startDate, endDate));
         }
 
