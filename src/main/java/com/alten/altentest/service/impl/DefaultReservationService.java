@@ -1,5 +1,6 @@
 package com.alten.altentest.service.impl;
 
+import com.alten.altentest.exception.BadRequestException;
 import com.alten.altentest.exception.ElementNotFoundException;
 import com.alten.altentest.model.Reservation;
 import com.alten.altentest.model.Room;
@@ -9,6 +10,8 @@ import com.alten.altentest.service.ReservationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -30,6 +33,8 @@ public class DefaultReservationService implements ReservationService {
 
     @Override
     public Reservation createReservation(Reservation reservation) {
+        validateRequest(reservation);
+
         Room room = findRoomById(reservation.getRoom().getId());
         reservation.setRoom(room);
 
@@ -66,5 +71,22 @@ public class DefaultReservationService implements ReservationService {
         return roomRepository
                 .findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Room not found for the given identifier: RoomId=" + id));
+    }
+
+    private void validateRequest(Reservation reservation) {
+        LocalDateTime createDate = LocalDateTime.now();
+
+        if (reservation.getStartDate().toLocalDate().isBefore(createDate.toLocalDate())
+                || reservation.getStartDate().toLocalDate().isEqual(createDate.toLocalDate())) {
+            throw new BadRequestException("A Reservation must be done at least with one day in advance.");
+        }
+
+        if (ChronoUnit.DAYS.between(createDate, reservation.getStartDate()) > 30) {
+            throw new BadRequestException("A Reservation cannot be done with more 30 days in advance.");
+        }
+
+        if (ChronoUnit.DAYS.between(reservation.getStartDate(), reservation.getEndDate()) > 3) {
+            throw new BadRequestException("A Reservation can have a duration great than 3 days");
+        }
     }
 }

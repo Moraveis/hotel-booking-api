@@ -67,17 +67,17 @@ public class ReservationControllerIntegTest {
     void givenIdFindReservation() throws Exception {
         Room room = roomRepository.findById(1L).get();
         Reservation reservation = buildReservation(room);
-        reservationRepository.save(reservation);
+        Reservation savedReservation = reservationRepository.save(reservation);
 
         mockMvc
                 .perform(get("/reservations/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", equalTo(1)))
-                .andExpect(jsonPath("$.startDate", equalTo("2021-06-27T08:00:00")))
-                .andExpect(jsonPath("$.endDate", equalTo("2021-06-28T08:00:00")))
-                .andExpect(jsonPath("$.reservedBy", equalTo("user")))
-                .andExpect(jsonPath("$.deleted", equalTo(false)));
+                .andExpect(jsonPath("$.id", equalTo(savedReservation.getId().intValue())))
+                .andExpect(jsonPath("$.startDate", equalTo(String.valueOf(savedReservation.getStartDate()))))
+                .andExpect(jsonPath("$.endDate", equalTo(String.valueOf(savedReservation.getEndDate()))))
+                .andExpect(jsonPath("$.reservedBy", equalTo(savedReservation.getReservedBy())))
+                .andExpect(jsonPath("$.deleted", equalTo(savedReservation.getDeleted())));
     }
 
     @Test
@@ -91,6 +91,45 @@ public class ReservationControllerIntegTest {
                         .content(mapper.writeValueAsString(reservationDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", equalTo(1)));
+    }
+
+    @Test
+    @DisplayName("Given reservation StartDate is for the same Day then we return BadRequest When creating reservation")
+    void whenRequestDataHasInvalidStartDateThenReturnBadRequestException() throws Exception {
+        ReservationDTO reservationDTO = buildReservationDTO();
+        reservationDTO.setStartDate(LocalDateTime.now().plusHours(5));
+
+        mockMvc
+                .perform(post("/reservations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(reservationDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("When reservation is done for more than 30Days Then return BadRequestException")
+    void whenReservationDoneForMoreThan30DaysThenReturnBadRequestException() throws Exception {
+        ReservationDTO reservationDTO = buildReservationDTO();
+        reservationDTO.setStartDate(reservationDTO.getStartDate().plusDays(31));
+
+        mockMvc
+                .perform(post("/reservations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(reservationDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("When reservation duration is more than 3Days Then return BadRequestException")
+    void whenReservationDurationIsMoreThan3DaysThenReturnBadRequestException() throws Exception {
+        ReservationDTO reservationDTO = buildReservationDTO();
+        reservationDTO.setEndDate(reservationDTO.getStartDate().plusDays(4));
+
+        mockMvc
+                .perform(post("/reservations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(reservationDTO)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

@@ -9,9 +9,11 @@ import java.time.LocalDateTime;
 public class TestUtil {
 
     public static Reservation buildReservation(Room room) {
+        LocalDateTime dateTime = buildStartDate(1L);
+
         return Reservation.builder()
-                .startDate(LocalDateTime.of(2021, 6, 27, 8, 0))
-                .endDate(LocalDateTime.of(2021, 6, 28, 8, 0))
+                .startDate(dateTime)
+                .endDate(dateTime.plusDays(3))
                 .reservedBy("user")
                 .deleted(false)
                 .room(room)
@@ -19,9 +21,11 @@ public class TestUtil {
     }
 
     public static ReservationDTO buildReservationDTO() {
+        LocalDateTime dateTime = buildStartDate(1L);
+
         return ReservationDTO.builder()
-                .startDate(LocalDateTime.of(2021, 6, 27, 8, 0))
-                .endDate(LocalDateTime.of(2021, 6, 28, 8, 0))
+                .startDate(dateTime)
+                .endDate(dateTime.plusDays(3))
                 .reservedBy("user")
                 .deleted(false)
                 .roomId(1L)
@@ -29,6 +33,15 @@ public class TestUtil {
     }
 
     public static Room buildRoom() {
-        return Room.builder().id(1L).available(true).number("001").suite(false).build();
+        return Room.builder()
+                .id(1L)
+                .available(true)
+                .number("001")
+                .suite(false)
+                .build();
+    }
+
+    public static LocalDateTime buildStartDate(Long daysToAdd) {
+        return LocalDateTime.now().withHour(8).withMinute(0).withSecond(0).plusDays(daysToAdd);
     }
 }
