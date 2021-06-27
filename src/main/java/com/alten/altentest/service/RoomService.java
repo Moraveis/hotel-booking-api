@@ -3,6 +3,7 @@ package com.alten.altentest.service;
 import com.alten.altentest.exception.ConstraintsViolationException;
 import com.alten.altentest.model.Room;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface RoomService {
@@ -16,5 +17,7 @@ public interface RoomService {
     void updateRoom(Long id, Room room);
 
     void updateRoomAvailability(Long id, Boolean available);
+
+    Room getRoomAvailabilityByReservationPeriod(Long id, LocalDateTime startDate, LocalDateTime endDate);
 
 }

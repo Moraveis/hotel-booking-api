@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -42,6 +43,14 @@ public class RoomController {
     @GetMapping("/{id}/reservations")
     public RoomDTO getReservationsForRoomId(@PathVariable("id") Long id) {
         return RoomMapper.toRoomDTOWithReservations(defaultRoomService.getRoomById(id));
+    }
+
+    @GetMapping("/{id}/availability")
+    public RoomDTO getRoomAvailabilityByReservationPeriod(@PathVariable("id") Long id,
+                                                          @RequestParam("startDate") LocalDateTime startDate,
+                                                          @RequestParam("endDate") LocalDateTime endDate) {
+
+        return RoomMapper.toRoomDTOWithReservations(defaultRoomService.getRoomAvailabilityByReservationPeriod(id, startDate, endDate));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
