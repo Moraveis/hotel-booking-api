@@ -50,6 +50,8 @@ public class DefaultReservationService implements ReservationService {
         existingReservation.setReservedBy(reservation.getReservedBy());
         existingReservation.setRoom(reservation.getRoom());
 
+        validateRequest(existingReservation);
+
         reservationRepository.save(existingReservation);
     }
 
