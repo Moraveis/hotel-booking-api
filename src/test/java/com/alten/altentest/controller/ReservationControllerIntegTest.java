@@ -98,7 +98,7 @@ public class ReservationControllerIntegTest {
     @DisplayName("Given reservation StartDate is for the same Day then we return BadRequest When creating reservation")
     void whenRequestDataHasInvalidStartDateThenReturnBadRequestException() throws Exception {
         ReservationDTO reservationDTO = buildReservationDTO();
-        reservationDTO.setStartDate(LocalDateTime.now().plusHours(5));
+        reservationDTO.setStartDate(LocalDateTime.now().plusHours(1));
 
         mockMvc
                 .perform(post("/reservations")
