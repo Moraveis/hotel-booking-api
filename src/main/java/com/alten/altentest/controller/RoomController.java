@@ -81,10 +81,6 @@ public class RoomController {
     }
 
     @ApiOperation(value = "Create Room")
-//    @ApiImplicitParams(value = {
-//            @ApiImplicitParam(value = "The content type of the body provided in the request.", name = "Content-Type", paramType = "header", defaultValue = "application/json", required = true),
-//            @ApiImplicitParam(value = "The content type that the client will accept.", name = "Accept", paramType = "header", defaultValue = "application/json", required = true),
-//    })
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Room created Successfully."),
             @ApiResponse(code = 400, message = "Fail to save Room due to constraints violations."),
@@ -98,10 +94,6 @@ public class RoomController {
     }
 
     @ApiOperation(value = "Update Room information")
-//    @ApiImplicitParams(value = {
-//            @ApiImplicitParam(value = "The content type of the body provided in the request.", name = "Content-Type", paramType = "header", defaultValue = "application/json", required = true),
-//            @ApiImplicitParam(value = "The content type that the client will accept.", name = "Accept", paramType = "header", defaultValue = "application/json", required = true),
-//    })
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Room found and updated."),
             @ApiResponse(code = 400, message = "Invalid or missing information provided."),

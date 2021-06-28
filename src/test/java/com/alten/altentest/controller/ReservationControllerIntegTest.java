@@ -6,6 +6,7 @@ import com.alten.altentest.model.Room;
 import com.alten.altentest.repository.ReservationRepository;
 import com.alten.altentest.repository.RoomRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,7 @@ import static com.alten.altentest.util.TestUtil.buildReservation;
 import static com.alten.altentest.util.TestUtil.buildReservationDTO;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -63,13 +65,31 @@ public class ReservationControllerIntegTest {
     }
 
     // TODO: fix assertions
-//    @Test
-//    @DisplayName("When a given ID is provided then we return the respective reservation")
-//    void givenIdFindReservation() throws Exception {
-//        Room room = roomRepository.findById(1L).get();
-//        Reservation reservation = buildReservation(room);
-//        Reservation savedReservation = reservationRepository.save(reservation);
-//
+    @Test
+    @DisplayName("When a given ID is provided then we return the respective reservation")
+    void givenIdFindReservation() throws Exception {
+        Room room = roomRepository.findById(1L).get();
+        Reservation reservation = buildReservation(room);
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        ReservationDTO result =
+                mapper.readValue(
+                        mockMvc.perform(get("/reservations/1"))
+                                .andDo(print())
+                                .andExpect(status().isOk())
+                                .andReturn()
+                                .getResponse()
+                                .getContentAsString(),
+                        ReservationDTO.class);
+
+        assertEquals(savedReservation.getId(), result.getId());
+        assertEquals(savedReservation.getStartDate(), result.getStartDate());
+        assertEquals(savedReservation.getEndDate(), result.getEndDate());
+        assertEquals(savedReservation.getReservedBy(), result.getReservedBy());
+        assertEquals(savedReservation.getDeleted(), result.getDeleted());
+        assertEquals(savedReservation.getRoom().getId(), result.getRoomId());
+
+
 //        mockMvc
 //                .perform(get("/reservations/1"))
 //                .andDo(print())
@@ -79,7 +99,7 @@ public class ReservationControllerIntegTest {
 //                .andExpect(jsonPath("$.endDate", equalTo(String.valueOf(savedReservation.getEndDate()))))
 //                .andExpect(jsonPath("$.reservedBy", equalTo(savedReservation.getReservedBy())))
 //                .andExpect(jsonPath("$.deleted", equalTo(savedReservation.getDeleted())));
-//    }
+    }
 
     @Test
     @DisplayName("When a reservation creation is requested then it is persisted")

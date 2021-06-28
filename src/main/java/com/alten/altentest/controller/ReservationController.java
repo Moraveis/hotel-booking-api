@@ -4,8 +4,6 @@ import com.alten.altentest.controller.mapper.ReservationMapper;
 import com.alten.altentest.datatransferobject.ReservationDTO;
 import com.alten.altentest.model.Reservation;
 import com.alten.altentest.service.impl.DefaultReservationService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -53,10 +51,6 @@ public class ReservationController {
     }
 
     @ApiOperation(value = "Create Reservation")
-//    @ApiImplicitParams(value = {
-//            @ApiImplicitParam(value = "The content type of the body provided in the request.", name = "Content-Type", paramType = "header", defaultValue = "application/json", required = true),
-//            @ApiImplicitParam(value = "The content type that the client will accept.", name = "Accept", paramType = "header", defaultValue = "application/json", required = true),
-//    })
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Reservation created Successfully."),
             @ApiResponse(code = 400, message = "Fail to save Reservation due to constraints violations or Invalid data provided."),
@@ -71,10 +65,6 @@ public class ReservationController {
     }
 
     @ApiOperation(value = "Create Reservation")
-//    @ApiImplicitParams(value = {
-//            @ApiImplicitParam(value = "The content type of the body provided in the request.", name = "Content-Type", paramType = "header", defaultValue = "application/json", required = true),
-//            @ApiImplicitParam(value = "The content type that the client will accept.", name = "Accept", paramType = "header", defaultValue = "application/json", required = true),
-//    })
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Reservation updated Successfully."),
             @ApiResponse(code = 400, message = "Fail to save Reservation due to constraints violations or Invalid data provided."),
