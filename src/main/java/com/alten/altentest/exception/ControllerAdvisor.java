@@ -2,6 +2,7 @@ package com.alten.altentest.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -23,15 +24,22 @@ public class ControllerAdvisor {
         return status(BAD_REQUEST).body(err);
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<StandardError> methodArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
+        StandardError err = new StandardError(currentTimeMillis(), BAD_REQUEST.value(), "Some constraints are violated.", e.getLocalizedMessage(), request.getRequestURI());
+        log.info("MethodArgumentNotValidException: {}", e.getMessage());
+        return status(BAD_REQUEST).body(err);
+    }
+
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<StandardError> badRequest(ConstraintsViolationException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> badRequest(BadRequestException e, HttpServletRequest request) {
         StandardError err = new StandardError(currentTimeMillis(), BAD_REQUEST.value(), "Invalid request, please review it.", e.getMessage(), request.getRequestURI());
         log.info("BadRequestException: {}", e.getMessage());
         return status(BAD_REQUEST).body(err);
     }
 
     @ExceptionHandler(ElementNotFoundException.class)
-    public ResponseEntity<StandardError> elementNotFound(ConstraintsViolationException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> elementNotFound(ElementNotFoundException e, HttpServletRequest request) {
         StandardError err = new StandardError(currentTimeMillis(), NOT_FOUND.value(), "Could not find resource for the request identifier.", e.getMessage(), request.getRequestURI());
         log.info("ElementNotFoundException: {}", e.getMessage());
         return status(NOT_FOUND).body(err);

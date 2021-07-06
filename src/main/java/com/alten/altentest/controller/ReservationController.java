@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @AllArgsConstructor
@@ -59,7 +60,7 @@ public class ReservationController {
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ReservationDTO createReservation(@RequestBody ReservationDTO reservationDTO) {
+    public ReservationDTO createReservation(@Valid @RequestBody ReservationDTO reservationDTO) {
         Reservation reservation = ReservationMapper.fromReservationDTO(reservationDTO);
         return ReservationMapper.toReservationDTO(defaultReservationService.createReservation(reservation));
     }
@@ -73,7 +74,7 @@ public class ReservationController {
     })
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateReservation(@PathVariable("id") Long id, @RequestBody ReservationDTO reservationDTO) {
+    public void updateReservation(@PathVariable("id") Long id, @Valid @RequestBody ReservationDTO reservationDTO) {
         Reservation reservation = ReservationMapper.fromReservationDTO(reservationDTO);
         defaultReservationService.updateReservation(id, reservation);
     }
