@@ -5,6 +5,7 @@ import com.alten.altentest.model.Reservation;
 import com.alten.altentest.model.Room;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class TestUtil {
 
@@ -38,6 +39,7 @@ public class TestUtil {
                 .available(true)
                 .number("001")
                 .suite(false)
+                .reservations(new ArrayList<>())
                 .build();
     }
 

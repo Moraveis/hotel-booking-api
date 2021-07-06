@@ -6,7 +6,6 @@ import com.alten.altentest.exception.ElementNotFoundException;
 import com.alten.altentest.model.Room;
 import com.alten.altentest.repository.RoomRepository;
 import com.alten.altentest.service.RoomService;
-import com.alten.altentest.util.ReservationUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -14,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import static com.alten.altentest.util.ReservationUtil.isOverlappingDates;
 
 @Service
 @AllArgsConstructor
@@ -71,7 +72,7 @@ public class DefaultRoomService implements RoomService {
             return room;
         }
 
-        if (room.getReservations().stream().filter(r -> !r.getDeleted()).anyMatch(r -> ReservationUtil.isWithinRange(startDate, endDate, r))) {
+        if (isOverlappingDates(room.getReservations(), startDate, endDate)) {
             throw new BadRequestException(String.format("No available room for the requested period: room=%s, start=%s, end=%s", id, startDate, endDate));
         }
 
