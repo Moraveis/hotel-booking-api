@@ -1,6 +1,5 @@
 package com.alten.altentest.service.impl;
 
-import com.alten.altentest.exception.BadRequestException;
 import com.alten.altentest.exception.ElementNotFoundException;
 import com.alten.altentest.model.Reservation;
 import com.alten.altentest.model.Room;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.alten.altentest.util.ReservationUtil.isOverlappingDates;
-import static com.alten.altentest.util.ReservationUtil.isWithinRange;
 import static com.alten.altentest.util.ReservationUtil.validateReservationRequest;
 
 @Service
